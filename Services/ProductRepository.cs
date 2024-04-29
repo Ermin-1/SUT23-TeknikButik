@@ -43,9 +43,21 @@ namespace SUT23_TeknikButik.Services
             return await _appDbContext.Products.FirstOrDefaultAsync(p => p.ProductId == id);
         }
 
-        public Task<Product> Update(Product Entity)
+        public async Task<Product> Update(Product Entity)
         {
-            throw new NotImplementedException();
+           var result = await _appDbContext.Products.FirstOrDefaultAsync
+                (p =>p.ProductId == Entity.ProductId);
+            if (result != null)
+            {
+                result.ProductName = Entity.ProductName;
+                result.Price = Entity.Price;
+                result.Category = Entity.Category;  
+
+                await _appDbContext.SaveChangesAsync();
+                return result;
+            }
+
+            return null;
         }
     }
 }

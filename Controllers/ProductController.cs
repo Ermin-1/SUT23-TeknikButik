@@ -93,6 +93,30 @@ namespace SUT23_TeknikButik.Controllers
             }
 
         }
+
+        [HttpPut("{id:int}")]
+        public async Task<ActionResult<Product>> UpdateProduct(int id, Product pro)
+        {
+            try
+            {
+                if( id != pro.ProductId)
+                {
+                    return BadRequest("Product ID dosent match!");
+                }
+
+               var productToUpdate = await _teknikButik.GetSingel(id);
+                if (productToUpdate == null)
+                {
+                    return NotFound($"Product with ID {id} Not Founded ");
+                }
+
+                return await _teknikButik.Update(pro);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error to update to database");
+            }
+        }
         
     }
 
